@@ -3,9 +3,8 @@ import Titulo from '../../components/texto/Titulo'
 import Pesquisa from '../../components/inputs/Pesquisa'
 import Tabela from '../../components/tabela/TabelaSimples'
 import Paginacao from '../../components/paginacao/Paginacao'
-import Moment from 'react-moment'
 
-class Pedidos extends Component {
+class Clientes extends Component {
 
     state = {
         pesquisa: '',
@@ -17,44 +16,51 @@ class Pedidos extends Component {
     render() {
         const { pesquisa } = this.state
         //DADOS
-        const dateToFormat = '1980-11-20T12:55-0300'
+        //const dateToFormat = '1980-11-20T12:55-0300'
         const dados = [
             {
                 "Cliente": "Cliente 1",
-                "Valor Total": 89.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/12313256432364216"
+                "E-mail": "cliente1@gmail.com",
+                "Telefone": "48 98427-0306",
+                "CPF": "29073222818",
+                "botaoDeDetalhes": "/cliente/cliente1@gmail.com"
             },
             {
                 "Cliente": "Cliente 2",
-                "Valor Total": 188.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/FDSF5361GF54FG"
+                "E-mail": "cliente2@gmail.com",
+                "Telefone": "48 98427-0306",
+                "CPF": "29073222818",
+                "botaoDeDetalhes": "/cliente/cliente2@gmail.com"
             },
             {
                 "Cliente": "Cliente 3",
-                "Valor Total": 19.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Pagamento Concluído",
-                "botaoDeDetalhes": "/pedido/123FLSD45FDF564216"
+                "E-mail": "cliente3@gmail.com",
+                "Telefone": "48 98427-0306",
+                "CPF": "29073222818",
+                "botaoDeDetalhes": "/cliente/cliente3@gmail.com"
+            },
+            {
+                "Cliente": "Cliente 4",
+                "E-mail": "cliente4@gmail.com",
+                "Telefone": "48 98427-0306",
+                "CPF": "29073222818",
+                "botaoDeDetalhes": "/cliente/cliente4@gmail.com"
             }
         ]
         return (
-            <div className='Pedidos full-width'>
+            <div className='Clientes full-width'>
                 <div className='Card'>
-                    <Titulo tipo='h1' titulo='Pedidos' />
+                    <Titulo tipo='h1' titulo='Clientes' />
                     <br />
                     <Pesquisa
                         valor={pesquisa}
-                        placeholder={'Pesquise aqui pelo nome do cliente'}
+                        placeholder={'Pesquise aqui pelo nome do cliente...'}
                         onChange={(e) => this.onchangePesquisa(e)}
                         onClick={() => alert('Pesquisar')}
                     />
                     <br />
                     <Tabela
-                        cabecalho={['Cliente', 'Valor Toral', 'Data', 'Situação']}
+                        cabecalho={['Cliente', 'E-mail', 'Telefone', 'CPF']}
                         dados={dados}
                     />
                     <Paginacao
@@ -69,4 +75,4 @@ class Pedidos extends Component {
     }
 }
 
-export default Pedidos
+export default Clientes

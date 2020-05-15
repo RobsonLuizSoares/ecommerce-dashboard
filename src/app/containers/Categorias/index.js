@@ -3,9 +3,9 @@ import Titulo from '../../components/texto/Titulo'
 import Pesquisa from '../../components/inputs/Pesquisa'
 import Tabela from '../../components/tabela/TabelaSimples'
 import Paginacao from '../../components/paginacao/Paginacao'
-import Moment from 'react-moment'
 
-class Pedidos extends Component {
+
+class Categorias extends Component {
 
     state = {
         pesquisa: '',
@@ -17,44 +17,50 @@ class Pedidos extends Component {
     render() {
         const { pesquisa } = this.state
         //DADOS
-        const dateToFormat = '1980-11-20T12:55-0300'
+        //const dateToFormat = '1980-11-20T12:55-0300'
         const dados = [
             {
-                "Cliente": "Cliente 1",
-                "Valor Total": 89.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/12313256432364216"
+                "Categorias": "Acessórios",
+                "Qtd. de Produtos": 15,
+                "botaoDeDetalhes": "/categoria/acessorios"
             },
             {
-                "Cliente": "Cliente 2",
-                "Valor Total": 188.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/FDSF5361GF54FG"
+                "Categorias": "Computadores",
+                "Qtd. de Produtos": 5,
+                "botaoDeDetalhes": "/categoria/computadores"
             },
             {
-                "Cliente": "Cliente 3",
-                "Valor Total": 19.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Pagamento Concluído",
-                "botaoDeDetalhes": "/pedido/123FLSD45FDF564216"
-            }
+                "Categorias": "Fones de Ouvido",
+                "Qtd. de Produtos": 7,
+                "botaoDeDetalhes": "/categoria/fones-de-ouvido"
+            },
+            {
+                "Categorias": "Gabinetes",
+                "Qtd. de Produtos": 3,
+                "botaoDeDetalhes": "/categoria/gabinetes"
+            },
+            {
+                "Categorias": "Processadores",
+                "Qtd. de Produtos": 8,
+                "botaoDeDetalhes": "/categoria/processadores"
+            },
+
+
         ]
         return (
-            <div className='Pedidos full-width'>
+            <div className='Categorias full-width'>
                 <div className='Card'>
-                    <Titulo tipo='h1' titulo='Pedidos' />
+                    <Titulo tipo='h1' titulo='Categorias' />
                     <br />
                     <Pesquisa
                         valor={pesquisa}
-                        placeholder={'Pesquise aqui pelo nome do cliente'}
+                        placeholder={'Pesquise aqui pelo nome da categoria...'}
                         onChange={(e) => this.onchangePesquisa(e)}
                         onClick={() => alert('Pesquisar')}
                     />
                     <br />
                     <Tabela
-                        cabecalho={['Cliente', 'Valor Toral', 'Data', 'Situação']}
+                        cabecalho={['Categorias', 'Qtd. de Produtos']}
                         dados={dados}
                     />
                     <Paginacao
@@ -69,4 +75,4 @@ class Pedidos extends Component {
     }
 }
 
-export default Pedidos
+export default Categorias

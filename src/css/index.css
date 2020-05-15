@@ -59,6 +59,30 @@ body {
   flex: 3;
 }
 
+.flex-4 {
+  flex: 4;
+}
+
+.flex-5 {
+  flex: 5;
+}
+
+.flex-6 {
+  flex: 6;
+}
+
+.flex-7 {
+  flex: 7;
+}
+
+.flex-8 {
+  flex: 8;
+}
+
+.flex-9 {
+  flex: 9;
+}
+
 .flex-start,
 .flex-end,
 .flex-center {
@@ -103,6 +127,11 @@ body {
   width: 180px;
 }
 
+
+.Texto-Dados {
+  display: flex;
+  line-height: 0;
+}
 
 .Menu a {
   color: var(--cor-branco);
@@ -279,12 +308,18 @@ main>div {
   color: var(--cor-info);
 }
 
-.Input-Simples input {
+.Input-Simples input,
+textarea {
   padding: 8px 12px;
   margin: 5px 0;
   border-radius: 5px;
   border: 1px solid var(--cor-cinza-claro);
   font-size: 0.95rem;
+}
+
+textarea {
+  width: 90%;
+  margin-top: 3%;
 }
 
 .Input-Simples label {
@@ -294,6 +329,12 @@ main>div {
 
 .Input-Valor {
   margin: 10px 0;
+}
+
+.Input-Valor .input-nostyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .Input-Valor input,
@@ -329,4 +370,49 @@ main>div {
 .Login a {
   text-decoration: none;
   color: var(--cor-cinza-medio)
+}
+
+.imagens-container {
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.imagem-container {
+  max-width: 100px;
+  height: 100px;
+  margin: 5px;
+  border-radius: 5px;
+  background-size: cover;
+  flex: 1;
+  flex-basis: 100px;
+}
+
+.imagem-remover {
+  background-color: var(--cor-terciaria);
+  width: 20px;
+  height: 20px;
+  font-size: 1rem;
+  color: var(--cor-branco);
+  border-radius: 100px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.imagem-remover:hover {
+  background-color: rgb(124, 3, 3);
+}
+
+.variacao-item {
+  background-color: var(--cor-cinza-claro);
+  color: var(--cor-cinza-escuro);
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin: 5px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.variacao-item-ativa,
+.variacao-item:hover {
+  background-color: var(--cor-cinza-medio);
 }

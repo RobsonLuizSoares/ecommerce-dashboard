@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 const TabelaSimples = ({ cabecalho, dados }) => {
     return (
-        <div className='TabelaSimples'>
-            <table className='simples'>
+        <div className='TabelaSimples '>
+            <table className='simples full-width'>
                 <thead>
                     <tr>
                         {

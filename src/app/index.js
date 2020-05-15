@@ -9,6 +9,21 @@ import base from './containers/HOC/Base'
 import Pedidos from './containers/pedidos/Pedidos'
 import Pedido from './containers/Pedido'
 
+import Clientes from './containers/Clientes'
+import Cliente from './containers/Cliente'
+
+import Produtos from './containers/Produtos'
+import Produto from './containers/Produto'
+
+import Categorias from './containers/Categorias'
+import Categoria from './containers/Categoria'
+
+import Avaliacoes from './containers/Avaliacoes'
+import Avaliacao from './containers/Avaliacao'
+
+import Configuracoes from './containers/Configuracoes'
+import Perfil from './containers/Perfil'
+
 //CONTAINER SEM BASE
 import Login from './containers/Login'
 import RecuperarSenha from './containers/RecuperarSenha'
@@ -21,7 +36,22 @@ class App extends Component {
         <Router>
           <div className='App'>
             <Route path={'/'} exact component={base(Pedidos)} />
-            <Route path={'/pedido'} exact component={base(Pedido)} />
+            <Route path={'/pedido/:id'} exact component={base(Pedido)} />
+
+            <Route path={'/clientes'} exact component={base(Clientes)} />
+            <Route path={'/cliente/:email'} component={base(Cliente)} />
+
+            <Route path={'/categorias'} component={base(Categorias)} />
+            <Route path={'/categoria/:id'} component={base(Categoria)} />
+
+            <Route path={'/produtos'} component={base(Produtos)} />
+            <Route path={'/produto/:id'} component={base(Produto)} />
+
+            <Route path={'/avaliacoes/:id'} component={base(Avaliacoes)} />
+            <Route path={'/avaliacao/:id'} component={base(Avaliacao)} />
+
+            <Route path={'/configuracoes'} component={base(Configuracoes)} />
+            <Route path={'/perfil'} component={base(Perfil)} />
 
 
             <Route path={'/login'} component={Login} />

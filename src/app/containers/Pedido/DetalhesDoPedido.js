@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Titulo from '../../components/texto/Titulo'
-import TextoDados from '../../components/texto/Dados'
+import TextoDadosPedidos from '../../components/texto/DadosPedidos'
 import ButtonSimples from '../../components/button/Simples'
 import TabelaSimples from '../../components/tabela/TabelaSimples'
 
@@ -28,10 +28,10 @@ class DetalhesDoPedido extends Component {
             <div className='flex-2'>
                 <Titulo tipo='h4' titulo='Dados do Cliente' />
                 <br />
-                <TextoDados chave='Nome' valor='Cliente 1' />
-                <TextoDados chave='CPF' valor='111.222.333-45' />
-                <TextoDados chave='Telefone' valor='48 98427-0306' />
-                <TextoDados chave='Data de Nascimento' valor='11/11/1980' />
+                <TextoDadosPedidos chave='Nome' valor='Cliente 1' />
+                <TextoDadosPedidos chave='CPF' valor='111.222.333-45' />
+                <TextoDadosPedidos chave='Telefone' valor='48 98427-0306' />
+                <TextoDadosPedidos chave='Data de Nascimento' valor='11/11/1980' />
 
             </div>
         )
@@ -42,11 +42,11 @@ class DetalhesDoPedido extends Component {
             <div className='flex-2'>
                 <Titulo tipo='h4' titulo='Dados de Entrega' />
                 <br />
-                <TextoDados chave='Endereço' valor='Rua Teste, 123' />
-                <TextoDados chave='Bairro' valor='Trindade' />
-                <TextoDados chave='Cidade' valor='Florianópolis' />
-                <TextoDados chave='Estado' valor='Santa Catarina' />
-                <TextoDados chave='CEP' valor='88036-050' />
+                <TextoDadosPedidos chave='Endereço' valor='Rua Teste, 123' />
+                <TextoDadosPedidos chave='Bairro' valor='Trindade' />
+                <TextoDadosPedidos chave='Cidade' valor='Florianópolis' />
+                <TextoDadosPedidos chave='Estado' valor='Santa Catarina' />
+                <TextoDadosPedidos chave='CEP' valor='88036-050' />
 
             </div>
         )
@@ -57,10 +57,10 @@ class DetalhesDoPedido extends Component {
             <div className='flex-3'>
                 <Titulo tipo='h4' titulo='Dados de Pagamento' />
                 <br />
-                <TextoDados chave='Taxa de Entrega' valor='R$ 15,50 (PAC)' />
-                <TextoDados chave='Valor do Pedido' valor='R$ 32,00' />
-                <TextoDados chave='Valor Total' valor='R$ 47,50' />
-                <TextoDados chave='Forma de Pagamento' valor='Boleto' />
+                <TextoDadosPedidos chave='Taxa de Entrega' valor='R$ 15,50 (PAC)' />
+                <TextoDadosPedidos chave='Valor do Pedido' valor='R$ 32,00' />
+                <TextoDadosPedidos chave='Valor Total' valor='R$ 47,50' />
+                <TextoDadosPedidos chave='Forma de Pagamento' valor='Boleto' />
             </div>
         )
     }
