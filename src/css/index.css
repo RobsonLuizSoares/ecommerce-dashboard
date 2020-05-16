@@ -110,10 +110,12 @@ body {
   height: 20px;
 }
 
-.Barra-Topo a {
+.Barra-Topo a,
+span {
   color: var(--cor-branco);
   text-decoration: none;
   font-weight: thin;
+  cursor: pointer;
 }
 
 .Menu {
@@ -348,6 +350,16 @@ textarea {
 .Input-Valor .input {
   background-color: var(--cor-cinza-claro);
   color: var(--cor-cinza-medio)
+}
+
+.input-error {
+  border: 0.5px solid red;
+  box-shadow: 0 0 5px rgb(221, 3, 3);
+}
+
+.small-danger {
+  color: rgb(221, 3, 3);
+  font-size: 12px;
 }
 
 .border-green {

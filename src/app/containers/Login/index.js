@@ -1,24 +1,52 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import Titulo from '../../components/texto/Titulo'
 import Input from '../../components/inputs/Simples'
 import Checkbox from '../../components/inputs/Checkbox'
 
 import Button from '../../components/button/Simples'
 
+import { connect } from 'react-redux'
+import * as actions from '../../actions'
+import { api, versao } from '../../config'
+
 class Login extends Component {
 
     state = {
         email: '',
         senha: '',
-        opcaoLembrar: true
+        opcaoLembrar: true,
+        erros: {}
     }
 
-    onChangeInput = (field, ev) => this.setState({ [field]: ev.target.value })
+    onChangeInput = (field, ev) => {
+        this.setState({ [field]: ev.target.value })
+        this.validate()
+    }
     onChangeCheckbox = (field) => this.setState({ [field]: !this.state[field] })
 
+    handleLogin() {
+        const { email, senha: password, opcaoLembrar } = this.state
+        if (!this.validate()) return
+
+        this.props.handleLogin({ email, password, opcaoLembrar }, () => {
+            alert('avisoLogin')
+        })
+    }
+
+    validate() {
+        const { email, senha } = this.state
+        const erros = {}
+
+        if (!email) erros.email = 'Preencha aqui com seu email'
+        if (!senha) erros.senha = 'Preencha aqui com sua senha'
+
+        this.setState({ erros })
+        console.log(erros)
+        return !(Object.keys(erros).length > 0)
+    }
+
     render() {
-        const { email, senha, opcaoLembrar } = this.state
+        const { email, senha, opcaoLembrar, erros } = this.state
         return (
             <div className='Login flex flex-center'>
                 <div className='Card'>
@@ -31,12 +59,14 @@ class Login extends Component {
                         label='E-mail'
                         value={email}
                         type='email'
+                        error={erros.email}
                         onChange={(ev) => this.onChangeInput('email', ev)}
                     />
                     <Input
                         label='Senha'
                         value={senha}
                         type='senha'
+                        error={erros.senha}
                         onChange={(ev) => this.onChangeInput('senha', ev)}
                     />
                     <div className='flex'>
@@ -48,7 +78,8 @@ class Login extends Component {
                             />
                         </div>
                         <div className='flex flex-1 flex-end'>
-                            <Link to='/recuperar-senha'><small>Esqueceu sua senha?</small></Link>
+                            {/* <Link to='/recuperar-senha'><small>Esqueceu sua senha?</small></Link> */}
+                            <a href={`${api}/${versao}/api/usuarios/recuperar-senha`}><small> Esqueceu sua senha?</small></a>
                         </div>
 
                     </div>
@@ -56,7 +87,7 @@ class Login extends Component {
                     <div className='flex flex-center'>
                         <Button
                             type='success'
-                            rota='/'
+                            onClick={() => this.handleLogin()}
                             label='ENTRAR'
                         />
                     </div>
@@ -67,4 +98,4 @@ class Login extends Component {
     }
 }
 
-export default Login
+export default connect(null, actions)(Login)
