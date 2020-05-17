@@ -3,44 +3,61 @@ import Titulo from '../../components/texto/Titulo'
 import Pesquisa from '../../components/inputs/Pesquisa'
 import Tabela from '../../components/tabela/TabelaSimples'
 import Paginacao from '../../components/paginacao/Paginacao'
-import Moment from 'react-moment'
+import moment from 'moment'
+import { connect } from 'react-redux'
+import { formatMoney } from '../../actions/index'
+import * as actions from '../../actions/pedidos'
 
 class Pedidos extends Component {
 
     state = {
         pesquisa: '',
-        atual: 0
+        atual: 0,
+        limit: 30
     }
+    componentDidMount() {
+        this.getPedidos()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.usuario && this.props.usuario) this.getPedidos()
+    }
+
+    getPedidos() {
+        const { atual, limit } = this.state
+        const { usuario } = this.props
+        if (!usuario) return null
+        const loja = usuario.loja
+        this.props.getPedidos(atual, limit, loja)
+    }
+
     onchangePesquisa = (e) => this.setState({ pesquisa: e.target.value })
 
-    changeNumeroAtual = (atual) => this.setState({ atual })
+    changeNumeroAtual = (atual) => {
+        this.setState({ atual }, () => {
+            this.getPedidos()
+        })
+    }
+
     render() {
+
         const { pesquisa } = this.state
-        //DADOS
-        const dateToFormat = '1980-11-20T12:55-0300'
-        const dados = [
-            {
-                "Cliente": "Cliente 1",
-                "Valor Total": 89.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/12313256432364216"
-            },
-            {
-                "Cliente": "Cliente 2",
-                "Valor Total": 188.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/FDSF5361GF54FG"
-            },
-            {
-                "Cliente": "Cliente 3",
-                "Valor Total": 19.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Pagamento Concluído",
-                "botaoDeDetalhes": "/pedido/123FLSD45FDF564216"
-            }
-        ]
+        const { pedidos } = this.props
+        const dados = []
+
+        console.log('Pedidos: ', pedidos)
+
+        /*      (pedidos ? pedidos.docs : []).forEach((item) => {
+                 dados.push({
+                     "Cliente": item.cliente ? item.cliente.nome : '',
+                     "Valor Total": formatMoney(item.pagamento.valor),
+                     "Data": moment(item.createdAt).format("DD/MM/YYYY").toLocaleString(),
+                     "Situação": item.pagamento.status !== 'Paga' ? item.pagamento.status : item.entrega.status,
+                     "botaoDeDetalhes": `/pedido/${item._id}`
+                 })
+             })
+  */
+
         return (
             <div className='Pedidos full-width'>
                 <div className='Card'>
@@ -59,8 +76,8 @@ class Pedidos extends Component {
                     />
                     <Paginacao
                         atual={this.state.atual}
-                        total={120}
-                        limite={20}
+                        total={this.props.pedidos ? this.props.pedidos.total : 0}
+                        limite={this.state.limit}
                         onClick={(numeroAtual) => this.changeNumeroAtual(numeroAtual)}
                     />
                 </div>
@@ -69,4 +86,11 @@ class Pedidos extends Component {
     }
 }
 
-export default Pedidos
+const mapStateToProps = state => (
+    {
+        pedidos: state.pedido.pedidos,
+        usuario: state.auth.usuario
+    }
+)
+
+export default connect(mapStateToProps, actions)(Pedidos)

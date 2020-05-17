@@ -6,10 +6,10 @@ import { HashRouter as Router, Route } from 'react-router-dom'
 import base from './containers/HOC/Base'
 import NoAuth from './containers/HOC/NoAuth'
 
-import { initApp } from './actions'
+import { initApp } from './actions/localStorage'
 
 //CONTAINER COM BASE
-import Pedidos from './containers/pedidos/Pedidos'
+import Pedidos from './containers/Pedidos/Pedidos'
 import Pedido from './containers/Pedido'
 
 import Clientes from './containers/Clientes'

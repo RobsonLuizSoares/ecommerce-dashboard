@@ -9,6 +9,8 @@ import { connect } from 'react-redux'
 import * as actions from '../../actions'
 import { api, versao } from '../../config'
 
+import AlertDanger from '../../components/Alert/Danger'
+
 class Login extends Component {
 
     state = {
@@ -28,8 +30,8 @@ class Login extends Component {
         const { email, senha: password, opcaoLembrar } = this.state
         if (!this.validate()) return
 
-        this.props.handleLogin({ email, password, opcaoLembrar }, () => {
-            alert('avisoLogin')
+        this.props.handleLogin({ email, password, opcaoLembrar }, (error) => {
+            this.setState({ erros: { ...this.state.erros, form: error } })
         })
     }
 
@@ -41,7 +43,6 @@ class Login extends Component {
         if (!senha) erros.senha = 'Preencha aqui com sua senha'
 
         this.setState({ erros })
-        console.log(erros)
         return !(Object.keys(erros).length > 0)
     }
 
@@ -55,6 +56,8 @@ class Login extends Component {
                         <p>Faça seu login abaixo</p>
                     </div>
                     <br />
+                    <AlertDanger error={erros.form} />
+
                     <Input
                         label='E-mail'
                         value={email}
@@ -65,7 +68,7 @@ class Login extends Component {
                     <Input
                         label='Senha'
                         value={senha}
-                        type='senha'
+                        type='password'
                         error={erros.senha}
                         onChange={(ev) => this.onChangeInput('senha', ev)}
                     />
@@ -78,7 +81,6 @@ class Login extends Component {
                             />
                         </div>
                         <div className='flex flex-1 flex-end'>
-                            {/* <Link to='/recuperar-senha'><small>Esqueceu sua senha?</small></Link> */}
                             <a href={`${api}/${versao}/api/usuarios/recuperar-senha`}><small> Esqueceu sua senha?</small></a>
                         </div>
 
