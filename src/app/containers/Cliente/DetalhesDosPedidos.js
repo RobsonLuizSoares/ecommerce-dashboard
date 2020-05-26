@@ -1,41 +1,55 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import Titulo from '../../components/texto/Titulo'
 import Tabela from '../../components/tabela/TabelaSimples'
+import Paginacao from '../../components/paginacao/Paginacao'
 
-import Moment from 'react-moment'
+import { connect } from 'react-redux'
+import * as actions from '../../actions/clientes'
+import { formatMoney } from '../../actions/index'
+
 
 class DetalhesDosPedidos extends Component {
 
+    state = {
+        atual: 0,
+        limit: 5
+    }
 
-    onchangePesquisa = (e) => this.setState({ pesquisa: e.target.value })
+    getPedidos() {
+        const { atual, limit } = this.state
+        const { usuario, id } = this.props
+        if (!usuario || !id) return null
+        this.props.getClientePedidos(id, atual, limit, usuario.loja)
 
-    changeNumeroAtual = (atual) => this.setState({ atual })
+    }
+
+    componentDidMount() {
+        this.getPedidos()
+    }
+
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.usuario && this.props.usuario) this.getPedidos()
+    }
+
+    //onchangePesquisa = (e) => this.setState({ pesquisa: e.target.value })
+
+    changeNumeroAtual = (atual) => this.setState({ atual }, () => this.getPedidos())
+
+
     render() {
-        //DADOS
-        const dateToFormat = '1980-11-20T12:55-0300'
-        const dados = [
-            {
-                "ID": "12313256432364216",
-                "Valor Total": 89.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/12313256432364216"
-            },
-            {
-                "ID": "FDSF5361GF54FG",
-                "Valor Total": 188.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Aguardando Pagamento",
-                "botaoDeDetalhes": "/pedido/FDSF5361GF54FG"
-            },
-            {
-                "ID": "123FLSD45FDF564216",
-                "Valor Total": 19.90,
-                "Data": <Moment>{dateToFormat}</Moment>,
-                "Situação": "Pagamento Concluído",
-                "botaoDeDetalhes": "/pedido/123FLSD45FDF564216"
-            }
-        ]
+        const { clientePedidos } = this.props
+        if (!clientePedidos) return (<div></div>)
+
+        let dados = (clientePedidos ? clientePedidos.docs : []).map((item) => ({
+            'ID': item._id,
+            'Valor Total': formatMoney(item.pagamento.valor),
+            'Data': moment(item.createdAt).format("DD/MM/YYYY"),
+            'Situação': `Pagamento: ${item.pagamento.status || '-'} / Entrega: ${item.entrega.status || '-'} `,
+            'botaoDeDetalhes': `/pedido/${item._id}`
+        }))
+
         return (
             <div className='Detalhes-dos-Pedidos full-width'>
                 <Titulo tipo='h3' titulo='Pedidos Feitos' />
@@ -44,9 +58,19 @@ class DetalhesDosPedidos extends Component {
                     cabecalho={['ID', 'Valor Total', 'Data', 'Situação']}
                     dados={dados}
                 />
+                <Paginacao
+                    atual={this.state.atual}
+                    total={this.props.clientePedidos ? this.props.clientePedidos.total : 0}
+                    limite={this.state.limit}
+                    onClick={(numeroAtual) => this.changeNumeroAtual(numeroAtual)}
+                />
             </div>
         )
     }
 }
 
-export default DetalhesDosPedidos
+const mapStateToProps = state => ({
+    usuario: state.auth.usuario,
+    clientePedidos: state.cliente.clientePedidos
+})
+export default connect(mapStateToProps, actions)(DetalhesDosPedidos)

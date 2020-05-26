@@ -4,103 +4,140 @@ import TextoDadosPedidos from '../../components/texto/DadosPedidos'
 import ButtonSimples from '../../components/button/Simples'
 import TabelaSimples from '../../components/tabela/TabelaSimples'
 
+import { connect } from 'react-redux'
+import { formatMoney } from '../../actions'
+import moment from 'moment'
+import * as actions from '../../actions/pedidos'
+import AlertGeral from '../../components/Alert/Geral'
+
 class DetalhesDoPedido extends Component {
 
+    state = {
+        aviso: null
+    }
+
+    cancelarPedido = () => {
+        const { usuario, pedido } = this.props;
+        if (!usuario || !pedido) return null;
+        if (window.confirm("Você realmente deseja cancelar esse pedido?")) {
+            this.props.cancelarPedido(pedido.pedido._id, usuario.loja, (error) => {
+                this.setState({
+                    aviso: {
+                        status: !error,
+                        msg: error ? error.message : "Pedido cancelado com sucesso!"
+                    }
+                });
+            });
+        }
+    }
+
     renderCabecalho() {
+        if (!this.props.pedido) return null;
+        const { pedido } = this.props.pedido;
         return (
-            <div className='flex'>
-                <div className='flex flex-1'>
-                    <Titulo tipo='h2' titulo='Pedido - Cliente 1 - 12-05-2020' />
+            <div className="flex">
+                <div className="flex-1 flex">
+                    <Titulo tipo="h2" titulo={`Pedido - ${pedido.cliente ? pedido.cliente.nome : ""} - ${moment(pedido.createdAt).format("DD/MM/YYYY")}`} />
                 </div>
-                <div className='flex flex-1 flex-end'>
-                    <ButtonSimples
-                        type='danger'
-                        label='Cancelar Pedido'
-                        onClick={() => alert('cancelado')}
-                    />
+                <div className="flex-1 flex flex-end">
+                    {
+                        pedido.cancelado ? (
+                            <ButtonSimples
+                                type="danger"
+                                label="CANCELADO" />
+                        ) : (
+                                <ButtonSimples
+                                    type="danger"
+                                    label="CANCELAR PEDIDO"
+                                    onClick={() => this.cancelarPedido()} />
+                            )
+                    }
                 </div>
             </div>
         )
     }
 
     renderDadosDoCliente() {
+        if (!this.props.pedido) return null;
+        const { cliente } = this.props.pedido.pedido;
         return (
-            <div className='flex-2'>
-                <Titulo tipo='h4' titulo='Dados do Cliente' />
+            <div className="flex-2">
+                <Titulo tipo="h4" titulo="Dados do Cliente" />
                 <br />
-                <TextoDadosPedidos chave='Nome' valor='Cliente 1' />
-                <TextoDadosPedidos chave='CPF' valor='111.222.333-45' />
-                <TextoDadosPedidos chave='Telefone' valor='48 98427-0306' />
-                <TextoDadosPedidos chave='Data de Nascimento' valor='11/11/1980' />
-
+                <TextoDadosPedidos chave="Nome" valor={cliente ? cliente.nome : ""} />
+                <TextoDadosPedidos chave="CPF" valor={cliente ? cliente.cpf : ""} />
+                <TextoDadosPedidos chave="Telefone" valor={cliente ? cliente.telefones[0] : ""} />
+                <TextoDadosPedidos chave="Data de Nascimento" valor={cliente ? moment(cliente.dataNascimento).format("DD/MM/YYYY") : ""} />
             </div>
         )
     }
 
     renderDadosDeEntrega() {
+        if (!this.props.pedido) return null;
+        const { entrega } = this.props.pedido.pedido;
         return (
-            <div className='flex-2'>
-                <Titulo tipo='h4' titulo='Dados de Entrega' />
+            <div className="flex-2">
+                <Titulo tipo="h4" titulo="Dados de Entrega" />
                 <br />
-                <TextoDadosPedidos chave='Endereço' valor='Rua Teste, 123' />
-                <TextoDadosPedidos chave='Bairro' valor='Trindade' />
-                <TextoDadosPedidos chave='Cidade' valor='Florianópolis' />
-                <TextoDadosPedidos chave='Estado' valor='Santa Catarina' />
-                <TextoDadosPedidos chave='CEP' valor='88036-050' />
-
+                <TextoDadosPedidos chave="Endereco" valor={entrega ? entrega.endereco.local : ""} />
+                <TextoDadosPedidos chave="Numero" valor={entrega ? entrega.endereco.numero : ""} />
+                <TextoDadosPedidos chave="Bairro" valor={entrega ? entrega.endereco.bairro : ""} />
+                <TextoDadosPedidos chave="Cidade" valor={entrega ? entrega.endereco.cidade : ""} />
+                <TextoDadosPedidos chave="Estado" valor={entrega ? entrega.endereco.estado : ""} />
+                <TextoDadosPedidos chave="CEP" valor={entrega ? entrega.endereco.CEP : ""} />
             </div>
         )
     }
 
     renderDadosDePagamento() {
+        if (!this.props.pedido) return null;
+        const { entrega, pagamento } = this.props.pedido.pedido;
         return (
-            <div className='flex-3'>
-                <Titulo tipo='h4' titulo='Dados de Pagamento' />
+            <div className="flex-3">
+                <Titulo tipo="h4" titulo="Dados de Pagamento" />
                 <br />
-                <TextoDadosPedidos chave='Taxa de Entrega' valor='R$ 15,50 (PAC)' />
-                <TextoDadosPedidos chave='Valor do Pedido' valor='R$ 32,00' />
-                <TextoDadosPedidos chave='Valor Total' valor='R$ 47,50' />
-                <TextoDadosPedidos chave='Forma de Pagamento' valor='Boleto' />
+                <TextoDadosPedidos chave="Taxa de Entrega" valor={`${formatMoney(entrega.custo)} (${entrega.tipo})`} />
+                <TextoDadosPedidos chave="Valor do Pedido" valor={`${formatMoney(pagamento.valor - entrega.custo)}`} />
+                <TextoDadosPedidos chave="Valor Total" valor={`${formatMoney(pagamento.valor)}`} />
+                <TextoDadosPedidos chave="Forma de Pagamento" valor={pagamento.forma} />
             </div>
         )
     }
+
     renderDadosDoCarrinho() {
-        const dados = [
-            {
-                "Produto": "Produto 1",
-                "Preço Unit.": "R$ 12,00",
-                "Quantidade": "1",
-                "Preço Total": "R$ 12,00"
-            },
-            {
-                "Produto": "Produto 2",
-                "Preço Unit.": "R$ 10,00",
-                "Quantidade": "2",
-                "Preço Total": "R$ 20,00"
-            }
-        ]
+        if (!this.props.pedido) return null;
+        const { carrinho } = this.props.pedido.pedido;
+        const dados = [];
+        carrinho.forEach((item) => {
+            dados.push({
+                "Produto": item.produto.titulo + " - " + item.variacao.nome,
+                "Preço Und.": formatMoney(item.precoUnitario),
+                "Quantidade": item.quantidade,
+                "Preço Total": formatMoney(item.precoUnitario * item.quantidade)
+            });
+        });
         return (
-            <div className='flex-3'>
-                <Titulo tipo='h4' titulo='Carrinho' />
+            <div className="flex-3">
+                <Titulo tipo="h4" titulo="Carrinho" />
                 <br />
                 <TabelaSimples
-                    cabecalho={['Produto', 'Preço Unit.', 'Quantidade', 'Preço Total']}
-                    dados={dados}
-                />
+                    cabecalho={["Produto", "Preço Und.", "Quantidade", "Preço Total"]}
+                    dados={dados} />
             </div>
         )
     }
 
     render() {
         return (
-            <div className='Detalhes-do-Pedido'>
+            <div className="Detalhes-do-Pedido">
                 {this.renderCabecalho()}
-                <div className='flex vertical'>
-                    <div className='flex horizontal'>
+                <AlertGeral aviso={this.state.aviso} />
+                <div className="flex vertical">
+                    <div className="flex horizontal">
                         {this.renderDadosDoCliente()}
                         {this.renderDadosDoCarrinho()}
                     </div>
-                    <div className='flex horizontal'>
+                    <div className="flex horizontal">
                         {this.renderDadosDeEntrega()}
                         {this.renderDadosDePagamento()}
                     </div>
@@ -110,4 +147,9 @@ class DetalhesDoPedido extends Component {
     }
 }
 
-export default DetalhesDoPedido
+const mapStateToProps = state => ({
+    pedido: state.pedido.pedido,
+    usuario: state.auth.usuario
+})
+
+export default connect(mapStateToProps, actions)(DetalhesDoPedido);

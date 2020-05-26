@@ -32,7 +32,3 @@ export const getHeaders = () => {
     }
 }
 
-export const initApp = () => {
-    const opcaoLembrar = localStorage.getItem('opcaoLembrar')
-    if (opcaoLembrar === 'false') cleanToken()
-}

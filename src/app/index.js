@@ -6,7 +6,7 @@ import { HashRouter as Router, Route } from 'react-router-dom'
 import base from './containers/HOC/Base'
 import NoAuth from './containers/HOC/NoAuth'
 
-import { initApp } from './actions/localStorage'
+import { initApp } from './actions'
 
 //CONTAINER COM BASE
 import Pedidos from './containers/Pedidos/Pedidos'
@@ -20,6 +20,7 @@ import Produto from './containers/Produto'
 
 import Categorias from './containers/Categorias'
 import Categoria from './containers/Categoria'
+import NovaCategoria from './containers/Categorias/NovaCategoria'
 
 import Avaliacoes from './containers/Avaliacoes'
 import Avaliacao from './containers/Avaliacao'
@@ -46,23 +47,24 @@ class App extends Component {
             <Route path={'/pedido/:id'} exact component={base(Pedido)} />
 
             <Route path={'/clientes'} exact component={base(Clientes)} />
-            <Route path={'/cliente/:email'} component={base(Cliente)} />
+            <Route path={'/cliente/:id'} component={base(Cliente)} />
 
-            <Route path={'/categorias'} component={base(Categorias)} />
+            <Route path={'/categorias'} exact component={base(Categorias)} />
+            <Route path={'/categorias/nova'} exact component={base(NovaCategoria)} />
             <Route path={'/categoria/:id'} component={base(Categoria)} />
 
-            <Route path={'/produtos'} component={base(Produtos)} />
-            <Route path={'/produto/:id'} component={base(Produto)} />
+            <Route path={'/produtos'} exact component={base(Produtos)} />
+            <Route path={'/produto/:id'} exact component={base(Produto)} />
 
-            <Route path={'/avaliacoes/:id'} component={base(Avaliacoes)} />
-            <Route path={'/avaliacao/:id'} component={base(Avaliacao)} />
+            <Route path={'/avaliacoes/:id'} exact component={base(Avaliacoes)} />
+            <Route path={'/avaliacao/:id'} exact component={base(Avaliacao)} />
 
-            <Route path={'/configuracoes'} component={base(Configuracoes)} />
-            <Route path={'/perfil'} component={base(Perfil)} />
+            <Route path={'/configuracoes'} exact component={base(Configuracoes)} />
+            <Route path={'/perfil'} exact component={base(Perfil)} />
 
-            <Route path={'/login'} component={NoAuth(Login)} />
-            <Route path={'/recuperar-senha'} component={NoAuth(RecuperarSenha)} />
-            <Route path={'/resetar-senha/:token'} component={NoAuth(ResetarSenha)} />
+            <Route path={'/login'} exact component={NoAuth(Login)} />
+            <Route path={'/recuperar-senha'} exact component={NoAuth(RecuperarSenha)} />
+            <Route path={'/resetar-senha/:token'} exact component={NoAuth(ResetarSenha)} />
 
           </div>
         </Router>

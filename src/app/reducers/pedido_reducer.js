@@ -1,14 +1,38 @@
 import {
-    GET_PEDIDOS
+    GET_PEDIDOS,
+    GET_PEDIDO,
+    CANCELAR_PEDIDO,
+    LIMPAR_PEDIDO
 } from '../actions/types'
 
 export default (state = {}, action) => {
     switch (action.type) {
         case GET_PEDIDOS:
-            console.log('ACTION.PAYLOAD: ', action.payload.pedidos)
             return {
-                pedidos: action.payload.pedidos,
-                ...state
+                ...state,
+                pedidos: action.payload.pedidos
+            }
+        case GET_PEDIDO:
+            return {
+                ...state,
+                pedido: action.payload
+            }
+        case LIMPAR_PEDIDO:
+            return {
+                ...state,
+                pedido: null
+            }
+        case CANCELAR_PEDIDO:
+            console.log(action.payload.cancelado)
+            return {
+                ...state,
+                pedido: {
+                    ...state.pedido,
+                    pedido: {
+                        ...state.pedido.pedido,
+                        cancelado: action.payload.cancelado
+                    }
+                }
             }
 
         default:

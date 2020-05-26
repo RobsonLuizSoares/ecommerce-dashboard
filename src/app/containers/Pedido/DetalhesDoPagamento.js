@@ -1,28 +1,44 @@
 import React, { Component } from 'react'
 import Titulo from '../../components/texto/Titulo'
 import ListaDinamica from '../../components/listas/ListaDinamicaSimples'
+import { connect } from 'react-redux'
 
+import * as actions from '../../actions/pedidos'
+import AlertGeral from '../../components/Alert/Geral'
 
 
 class DetalhesDoPagamento extends Component {
     state = {
-        status: [
-            "Aguardando Pagamento",
-            "Processando Pagamento"
-        ]
+        aviso: null
     }
 
+    cleanState() {
+        this.setState({ aviso: null })
+    }
     onAddListaDinamica = (texto) => {
-        if (!texto) return false
-        const { status } = this.state
-        status.push(texto)
-        this.setState({ status })
+        this.cleanState()
+        if (!texto) return this.setState({ aviso: { status: false, msg: 'Preencha o campo para enviar um novo status' } })
+
+        const { pedido, usuario } = this.props
+        this.props.setNovoStatusPagamento(texto, pedido.pedido.pagamento._id, pedido.pedido._id, usuario.loja, (error) => {
+            if (error) this.setState({ aviso: { status: false, msg: error.message } })
+        })
+
     }
     render() {
-        const { status } = this.state
+
+        const { pedido } = this.props
+        const { aviso } = this.state
+
+        if (!pedido) return <div></div>
+
+        const status = (pedido.registros || [])
+            .reduce((all, item) => (item.tipo === 'pagamento') ? all.concat([item.situacao]) : all, [])
+
         return (
             <div className='Detalhes-do-Pagamento'>
                 <Titulo tipo='h3' titulo='Pagamento' />
+                <AlertGeral aviso={aviso} />
                 <br />
                 <ListaDinamica
                     dados={status}
@@ -33,4 +49,8 @@ class DetalhesDoPagamento extends Component {
     }
 }
 
-export default DetalhesDoPagamento
+const mapStateToProps = state => ({
+    pedido: state.pedido.pedido,
+    usuario: state.auth.usuario
+})
+export default connect(mapStateToProps, actions)(DetalhesDoPagamento)

@@ -23,7 +23,7 @@ class ListaDinamicaSimples extends Component {
                     dados.map((item, idx) => (
                         <div key={idx} className='flex horizontal'>
                             <div className='flex flex-3 flex-start border-green'>
-                                <span>{item}</span>
+                                <h4>{item}</h4>
                             </div>
                             {
                                 onRemove &&
