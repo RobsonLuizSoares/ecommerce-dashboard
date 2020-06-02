@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Titulo from '../../components/texto/Titulo'
-import Pesquisa from '../../components/inputs/Pesquisa'
 import Tabela from '../../components/tabela/TabelaSimples'
-import Paginacao from '../../components/paginacao/Paginacao'
 
 import { connect } from 'react-redux'
 import * as actions from '../../actions/categorias'
@@ -45,8 +43,8 @@ class Categorias extends Component {
             'Categorias': item.nome,
             'Qtd. de Produtos': item.produtos.length,
             'botaoDeDetalhes': `/categoria/${item._id}`
-        }))
 
+        }))
         return (
             <div className='Categorias full-width'>
                 <div className='Card'>
@@ -60,7 +58,6 @@ class Categorias extends Component {
                         cabecalho={['Categorias', 'Qtd. de Produtos']}
                         dados={dados}
                     />
-
                 </div>
             </div>
         )

@@ -53,7 +53,7 @@ export const getCategoriaProdutos = (id, atual, limit, loja) => {
 
 export const updateCategoria = (categoria, id, loja, cb) => {
     return function (dispatch) {
-        axios.put(`${api}/${versao}/api/categorias/${id}?${loja}`, {
+        axios.put(`${api}/${versao}/api/categorias/${id}?loja=${loja}`, {
             nome: categoria.nome,
             codigo: categoria.codigo,
             disponibilidade: categoria.disponibilidade === 'disponivel' ? 'true' : 'false'
@@ -68,7 +68,7 @@ export const updateCategoria = (categoria, id, loja, cb) => {
 
 export const removerCategoria = (id, loja, cb) => {
     return function (dispatch) {
-        axios.delete(`${api}/${versao}/api/categorias/${id}?${loja}`, getHeaders())
+        axios.delete(`${api}/${versao}/api/categorias/${id}?loja=${loja}`, getHeaders())
             .then(response => {
                 dispatch({ type: REMOVE_CATEGORIA, payload: response.data })
                 cb(null)

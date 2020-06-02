@@ -1,78 +1,62 @@
 import React, { Component } from 'react'
 import Titulo from '../../components/texto/Titulo'
-import Pesquisa from '../../components/inputs/Pesquisa'
 import Tabela from '../../components/tabela/TabelaSimples'
 import Paginacao from '../../components/paginacao/Paginacao'
 
+import { connect } from 'react-redux'
+import * as actions from '../../actions/categorias'
 
 class ListaDeProdutos extends Component {
 
     state = {
-        pesquisa: '',
-        atual: 0
+        atual: 0,
+        limit: 5
     }
-    onchangePesquisa = (e) => this.setState({ pesquisa: e.target.value })
 
-    changeNumeroAtual = (atual) => this.setState({ atual })
+    getCategoriaProdutos(props) {
+        const { atual, limit } = this.state
+        const { usuario, categoria } = this.props
+
+        if (!usuario || !categoria) return null
+        this.props.getCategoriaProdutos(categoria._id, atual, limit, usuario.loja)
+    }
+
+    componentDidMount() {
+        this.getCategoriaProdutos(this.props)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            (!prevProps.usuario && this.props.usuario) ||
+            (!prevProps.categoria && this.props.categoria)
+        ) this.getCategoriaProdutos(this.props)
+    }
+
+    changeNumeroAtual = (atual) => this.setState({ atual }, () => this.getCategoriaProdutos(this.props))
+
     render() {
-        const { pesquisa } = this.state
-        //DADOS
-        //const dateToFormat = '1980-11-20T12:55-0300'
-        const dados = [
-            {
-                "Produto": "Mouse 1",
-                "Estoque": 20,
-                "Disponibilidade": "sim",
-                "botaoDeDetalhes": "/produto/KDFAJFDSFO3"
-            },
-            {
-                "Produto": "Mouse 2",
-                "Estoque": 20,
-                "Disponibilidade": "não",
-                "botaoDeDetalhes": "/produto/KDFDFAAJFDSFO3"
-            },
-            {
-                "Produto": "Mouse 3",
-                "Estoque": 20,
-                "Disponibilidade": "sim",
-                "botaoDeDetalhes": "/produto/KDFAJFDSKFDLFO3"
-            },
-            {
-                "Produto": "Mouse 4",
-                "Estoque": 20,
-                "Disponibilidade": "sim",
-                "botaoDeDetalhes": "/produto/KDFAJFDKFLD"
-            },
-            {
-                "Produto": "Mouse 5",
-                "Estoque": 20,
-                "Disponibilidade": "sim",
-                "botaoDeDetalhes": "/produto/KJFDLSDF"
-            },
 
+        const { categoriaProdutos } = this.props
 
-
-        ]
+        const dados = (categoriaProdutos ? categoriaProdutos.docs : []).map((item) => ({
+            'Produto': item.titulo,
+            'SKU': item.sku,
+            'Disponibilidade': item.disponibilidade ? 'Disponível' : 'Indisponível',
+            'botaoDeDetalhes': `/produto/${item._id}`
+        }))
         return (
             <div className='ListaDeProdutos '>
                 <br /><hr />
                 <Titulo tipo='h2' titulo='Produtos da Categoria' />
                 <br />
-                <Pesquisa
-                    valor={pesquisa}
-                    placeholder={'Pesquise aqui pelo nome do produto ou descrição...'}
-                    onChange={(e) => this.onchangePesquisa(e)}
-                    onClick={() => alert('Pesquisar')}
-                />
-                <br />
                 <Tabela
-                    cabecalho={['Produto', 'Estoque', 'Disponibilidade']}
+                    cabecalho={['Produto', 'SKU', 'Disponibilidade']}
                     dados={dados}
                 />
                 <Paginacao
                     atual={this.state.atual}
-                    total={120}
-                    limite={20}
+                    total={this.props.categoriaProdutos ? this.props.categoriaProdutos.total : 0}
+                    limite={this.state.limit}
                     onClick={(numeroAtual) => this.changeNumeroAtual(numeroAtual)}
                 />
             </div>
@@ -80,4 +64,10 @@ class ListaDeProdutos extends Component {
     }
 }
 
-export default ListaDeProdutos
+const mapStateToProps = state => ({
+    categoriaProdutos: state.categoria.categoriaProdutos,
+    categoria: state.categoria.categoria,
+    usuario: state.auth.usuario
+})
+
+export default connect(mapStateToProps, actions)(ListaDeProdutos)

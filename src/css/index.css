@@ -308,6 +308,14 @@ main>div {
     color: var(--cor-info);
 }
 
+.Input-Select select {
+    padding: 8px 8px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--cor-cinza-claro);
+    font-size: 0.95rem;
+}
+
 .Input-Simples input,
 textarea {
     padding: 8px 12px;
@@ -436,7 +444,7 @@ textarea {
     background-color: var(--cor-cinza-claro);
     color: var(--cor-cinza-escuro);
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 300;
     line-height: 10px;
 }
 
@@ -447,6 +455,7 @@ textarea {
     color: var(--cor-branco);
     text-align: center;
     font-size: 1rem;
+    font-weight: 300;
 }
 
 .alert-success {

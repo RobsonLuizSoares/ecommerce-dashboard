@@ -97,6 +97,9 @@ class DetalhesCategoria extends Component {
 
         if (!nome) erros.nome = 'Preencha com o nome da Categoria'
         if (!codigo) erros.codigo = 'Preencha com o código da Categoria'
+        if (codigo && codigo.length < 3) erros.codigo = 'Preencha com mais que 3 caracteres'
+        if (codigo && codigo.indexOf(' ') !== -1) erros.codigo = 'Favor não deixar espaços no código'
+
         this.setState({ erros })
         return !(Object.keys(erros).length > 0)
     }
@@ -105,7 +108,6 @@ class DetalhesCategoria extends Component {
         const { nome, disponibilidade, codigo, erros } = this.state
         return (
             <div>
-                {JSON.stringify(this.state)}
                 <TextoDados
                     chave='Código'
                     valor={(
@@ -113,7 +115,7 @@ class DetalhesCategoria extends Component {
                             name='codigo' noStyle
                             value={codigo}
                             erro={erros.codigo}
-                            handleSubmit={(valor) => this.setState({ codigo: valor })}
+                            handleSubmit={(valor) => this.onChangeInput('codigo', valor)}
                         />
                     )}
                 />
@@ -124,7 +126,7 @@ class DetalhesCategoria extends Component {
                             name='nome' noStyle
                             value={nome}
                             erro={erros.nome}
-                            handleSubmit={(valor) => this.setState({ nome: valor })}
+                            handleSubmit={(valor) => this.onChangeInput('nome', valor)}
                         />
                     )}
                 />
