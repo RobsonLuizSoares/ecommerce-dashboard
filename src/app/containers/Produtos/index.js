@@ -29,10 +29,11 @@ class Produtos extends Component {
 
     componentDidMount() {
         this.getProdutos(this.props)
+        this.props.limparProduto()
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps && this.props.usuario) this.getProdutos(this.props)
+        if (!prevProps.usuario && this.props.usuario) this.getProdutos(this.props)
     }
 
     handleSubmitPesquisa() {

@@ -1,25 +1,27 @@
 import {
-    GET_PRODUTOS,
-    GET_PRODUTO,
-    LIMPAR_PRODUTO
+    GET_VARIACOES,
+    GET_VARIACAO,
+    LIMPAR_VARIACAO,
+    REMOVE_VARIACAO
 } from '../actions/types'
 
 export default (state = {}, action) => {
     switch (action.type) {
-        case GET_PRODUTOS:
+        case GET_VARIACOES:
             return {
                 ...state,
-                produtos: action.payload.produtos
+                variacoes: action.payload.variacoes
             }
-        case GET_PRODUTO:
+        case GET_VARIACAO:
             return {
                 ...state,
-                produto: action.payload.produto
+                variacao: action.payload.variacao
             }
-        case LIMPAR_PRODUTO:
+        case LIMPAR_VARIACAO:
+        case REMOVE_VARIACAO:
             return {
                 ...state,
-                produto: null
+                variacao: null
             }
         default:
             return state

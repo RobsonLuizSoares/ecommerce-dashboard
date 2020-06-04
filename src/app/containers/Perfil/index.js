@@ -5,19 +5,41 @@ import TextoDados from '../../components/texto/Dados'
 import InputValor from '../../components/inputs/InputValor'
 import InputSimples from '../../components/inputs/Simples'
 
+import { connect } from 'react-redux'
+import * as actions from '../../actions'
+import AlertGeral from '../../components/Alert/Geral'
 
 class Perfil extends Component {
 
-    state = {
-        nome: 'Usuario Teste',
-        email: 'usuario@usuario.com',
-        telefone: '48 98427-0306',
+    constructor(props) {
+        super()
+        this.state = {
+            nome: props.usuario ? props.usuario.nome : '',
+            email: props.usuario ? props.usuario.email : '',
 
-        senhaAntiga: '',
-        novaSenha: '',
-        confirmarNovaSenha: ''
+            senhaAntiga: '',
+            novaSenha: '',
+            confirmarNovaSenha: '',
+
+            aviso: null,
+            erros: {}
+        }
     }
 
+    componentDidMount() {
+        this.props.getUser()
+
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.usuario && prevProps.usuario &&
+            this.props.usuario.updatedAt !== prevProps.usuario.updatedAt) {
+            this.setState({
+                nome: this.props.usuario ? this.props.usuario.nome : '',
+                email: this.props.usuario ? this.props.usuario.email : '',
+            })
+        }
+    }
 
     renderCabecalho() {
         return (
@@ -29,16 +51,61 @@ class Perfil extends Component {
                     <ButtonSimples
                         type='success'
                         label='Salvar'
-                        onClick={() => alert('Salvo')}
+                        onClick={() => this.updateUsuario()}
                     />
                 </div>
             </div>
         )
     }
 
+    onChangeInput = (field, value) => this.setState({ [field]: value }, () => this.validate())
+
+    validate() {
+        const { nome, email, senhaAntiga, novaSenha, confirmarNovaSenha } = this.state
+        console.log('Senha antiga', typeof (senhaAntiga))
+        const erros = {}
+
+        if (!nome) erros.nome = 'Preencha aqui com o nome'
+        if (!email) erros.email = 'Preencha aqui com o email'
+
+        if (senhaAntiga || novaSenha || confirmarNovaSenha) {
+            if (!senhaAntiga) erros.senhaAntiga = 'Preencha aqui com a senha antiga'
+            if (!novaSenha) erros.novaSenha = 'Preencha aqui com a nova senha '
+            if (!confirmarNovaSenha) erros.confirmarNovaSenha = 'Repita aqui a nova senha'
+            if (novaSenha !== confirmarNovaSenha) erros.confirmarNovaSenha = 'Digite novamente. As senhas não coincidem.'
+        }
+        this.setState({ erros })
+        return !(Object.keys(erros).length > 0)
+    }
+
+
+    updateUsuario() {
+        if (!this.validate()) return null
+        const { nome, email, novaSenha, senhaAntiga } = this.state
+
+        const dados = {}
+
+        dados.nome = nome
+        dados.email = email
+        if (novaSenha) {
+            dados.password = novaSenha
+            dados.oldPassword = senhaAntiga
+        }
+
+        this.props.updateUser(dados, (error) => {
+            if (!error) this.setState({ senhaAntiga: '', novaSenha: '', confirmarNovaSenha: '' })
+            this.setState({
+                aviso: {
+                    status: !error,
+                    msg: error ? error.message : 'Dados atualizados com sucesso'
+                }
+            })
+        })
+    }
+
 
     renderDadosConfiguracao() {
-        const { nome, telefone, email } = this.state
+        const { nome, email, erros } = this.state
         return (
             <div className='dados-configuracao'>
                 <TextoDados
@@ -46,8 +113,9 @@ class Perfil extends Component {
                     valor={(
                         <InputValor
                             value={nome}
+                            erro={erros.nome}
                             name='nome' noStyle
-                            handleSubmit={(valor) => this.setState({ nome: valor })}
+                            handleSubmit={(valor) => this.onChangeInput('nome', valor)}
                         />
                     )}
                 />
@@ -56,18 +124,9 @@ class Perfil extends Component {
                     valor={(
                         <InputValor
                             value={email}
+                            erro={erros.email}
                             name='email' noStyle
-                            handleSubmit={(valor) => this.setState({ email: valor })}
-                        />
-                    )}
-                />
-                <TextoDados
-                    chave='Telefone'
-                    valor={(
-                        <InputValor
-                            value={telefone}
-                            name='telefone' noStyle
-                            handleSubmit={(valor) => this.setState({ telefone: valor })}
+                            handleSubmit={(valor) => this.onChangeInput('email', valor)}
                         />
                     )}
                 />
@@ -76,7 +135,7 @@ class Perfil extends Component {
     }
 
     renderDadosSenha() {
-        const { senhaAntiga, novaSenha, confirmarNovaSenha } = this.state
+        const { senhaAntiga, novaSenha, confirmarNovaSenha, erros } = this.state
         return (
             <div className='dados-senha'>
                 <InputSimples
@@ -84,21 +143,24 @@ class Perfil extends Component {
                     name='senha-antiga'
                     label="Senha Antiga:"
                     value={senhaAntiga}
-                    onChange={(ev) => this.setState({ senhaAntiga: ev.targe.value })}
+                    error={erros.senhaAntiga}
+                    onChange={(ev) => this.onChangeInput('senhaAntiga', ev.targe.value)}
                 />
                 <InputSimples
                     type='password'
                     name='nova-senha'
+                    error={erros.novaSenha}
                     label="Nova Senha:"
                     value={novaSenha}
-                    onChange={(ev) => this.setState({ novaSenha: ev.targe.value })}
+                    onChange={(ev) => this.onChangeInput('novaSenha', ev.targe.value)}
                 />
                 <InputSimples
                     type='password'
                     name='confirmar-nova-senha'
+                    error={erros.confirmarNovaSenha}
                     label="Confirmar Nova Senha: "
                     value={confirmarNovaSenha}
-                    onChange={(ev) => this.setState({ confirmarNovaSenha: ev.targe.value })}
+                    onChange={(ev) => this.onChangeInput('confirmarNovaSenha', ev.targe.value)}
                 />
             </div>
 
@@ -110,6 +172,7 @@ class Perfil extends Component {
             <div className='Perfil full-width'>
                 <div className='Card'>
                     {this.renderCabecalho()}
+                    <AlertGeral aviso={this.state.aviso} />
                     <div className='flex horizontal'>
                         <div className='flex-1'>
                             {this.renderDadosConfiguracao()}
@@ -124,4 +187,8 @@ class Perfil extends Component {
     }
 }
 
-export default Perfil
+const mapStateToProps = state => ({
+    usuario: state.auth.usuario
+})
+
+export default connect(mapStateToProps, actions)(Perfil)
