@@ -144,7 +144,7 @@ class Perfil extends Component {
                     label="Senha Antiga:"
                     value={senhaAntiga}
                     error={erros.senhaAntiga}
-                    onChange={(ev) => this.onChangeInput('senhaAntiga', ev.targe.value)}
+                    onChange={(ev) => this.onChangeInput('senhaAntiga', ev.target.value)}
                 />
                 <InputSimples
                     type='password'
@@ -152,7 +152,7 @@ class Perfil extends Component {
                     error={erros.novaSenha}
                     label="Nova Senha:"
                     value={novaSenha}
-                    onChange={(ev) => this.onChangeInput('novaSenha', ev.targe.value)}
+                    onChange={(ev) => this.onChangeInput('novaSenha', ev.target.value)}
                 />
                 <InputSimples
                     type='password'
@@ -160,7 +160,7 @@ class Perfil extends Component {
                     error={erros.confirmarNovaSenha}
                     label="Confirmar Nova Senha: "
                     value={confirmarNovaSenha}
-                    onChange={(ev) => this.onChangeInput('confirmarNovaSenha', ev.targe.value)}
+                    onChange={(ev) => this.onChangeInput('confirmarNovaSenha', ev.target.value)}
                 />
             </div>
 
